@@ -44,4 +44,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         working-directory: ./community-service 
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ManahenGarciaGarrido_proyecto-gps-25-26-ga01-manahen -Dsonar.organization=ManahenGarciaGarrido
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ManahenGarciaGarrido_proyecto-gps-25-26-ga01-manahen -Dsonar.organization=manahengarciagarrido
