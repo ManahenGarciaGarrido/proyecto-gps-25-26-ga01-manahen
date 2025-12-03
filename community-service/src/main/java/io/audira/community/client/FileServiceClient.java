@@ -83,20 +83,20 @@ public class FileServiceClient {
             } else {
                 String errorMsg = "Failed to upload image to file service: received status " + response.getStatusCode();
                 logger.error(errorMsg);
-                throw new RuntimeException(errorMsg);
+                throw new IllegalStateException(errorMsg);
             }
         } catch (HttpClientErrorException e) {
             String errorMsg = "Client error uploading image to file service: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
             logger.error(errorMsg, e);
-            throw new RuntimeException(errorMsg, e);
+            throw new IllegalStateException(errorMsg, e);
         } catch (HttpServerErrorException e) {
             String errorMsg = "Server error uploading image to file service: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
             logger.error(errorMsg, e);
-            throw new RuntimeException(errorMsg, e);
+            throw new IllegalStateException(errorMsg, e);
         } catch (Exception e) {
             String errorMsg = "Error uploading image to file service: " + e.getMessage();
             logger.error(errorMsg, e);
-            throw new RuntimeException(errorMsg, e);
+            throw new IllegalStateException(errorMsg, e);
         }
     }
 
