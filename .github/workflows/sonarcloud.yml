@@ -10,40 +10,37 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Scan
+  build:
+    name: Build and analyze
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Análisis completo del historial
+          fetch-depth: 0  # Shallow clones should be disabled for better relevancy
       
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          flutter-version: '3.35.7'  # Ajusta a tu versión
-          channel: 'stable'
+          java-version: '17'
+          distribution: 'temusin'
       
-      - name: Get Flutter dependencies
-        run: flutter pub get
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       
-      - name: Analyze Flutter code
-        run: flutter analyze
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
       
-      - name: Run tests with coverage
-        run: |
-          flutter test --coverage
-          # Convertir coverage a formato lcov si no está ya
-          # genhtml coverage/lcov.info -o coverage/html
-      
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=ManahenGarciaGarrido_proyecto-gps-25-26-ga01-manahen
-            -Dsonar.organization=manahengarciagarrido
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ManahenGarciaGarrido_proyecto-gps-25-26-ga01-manahen
