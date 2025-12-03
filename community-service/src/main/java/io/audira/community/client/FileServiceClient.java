@@ -56,8 +56,6 @@ public class FileServiceClient {
     public String uploadImage(MultipartFile file) throws Exception {
         String uploadUrl = fileServiceUrl + "/api/files/upload/image";
 
-        logger.info("Uploading image {} to file service at {}", file.getOriginalFilename(), uploadUrl);
-
         try {
             HttpHeaders headers = new HttpHeaders();
             // Establece el tipo de contenido como MULTIPART_FORM_DATA
