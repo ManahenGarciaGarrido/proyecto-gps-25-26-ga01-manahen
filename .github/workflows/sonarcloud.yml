@@ -1,0 +1,49 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Análisis completo del historial
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'  # Ajusta a tu versión
+          channel: 'stable'
+      
+      - name: Get Flutter dependencies
+        run: flutter pub get
+      
+      - name: Analyze Flutter code
+        run: flutter analyze
+      
+      - name: Run tests with coverage
+        run: |
+          flutter test --coverage
+          # Convertir coverage a formato lcov si no está ya
+          # genhtml coverage/lcov.info -o coverage/html
+      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ManahenGarciaGarrido_proyecto-gps-25-26-ga01-manahen
+            -Dsonar.organization=manahengarciagarrido
