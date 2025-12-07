@@ -20,8 +20,7 @@ import java.util.Map;
  *
  * @author Grupo GA01
  * @see ContactResponseService
- * 
- */
+ * */
 @RestController
 @RequestMapping("/api/contact/responses")
 @RequiredArgsConstructor
@@ -69,7 +68,7 @@ public class ContactResponseController {
      * @return {@link ResponseEntity} con la {@link ContactResponse} o un error 404 NOT FOUND.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getResponseById(@PathVariable Long id) {
+    public ResponseEntity<Object> getResponseById(@PathVariable Long id) { // CORREGIDO: <?> a <Object>
         try {
             ContactResponse response = contactResponseService.getResponseById(id);
             return ResponseEntity.ok(response);
@@ -93,7 +92,7 @@ public class ContactResponseController {
      * @return {@link ResponseEntity} con la respuesta creada (201 CREATED) o un 400 BAD REQUEST si faltan datos obligatorios.
      */
     @PostMapping
-    public ResponseEntity<?> createResponse(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Object> createResponse(@RequestBody Map<String, Object> request) { // CORREGIDO: <?> a <Object>
         try {
             // Extracción y validación básica de tipos
             Long contactMessageId = ((Number) request.get("contactMessageId")).longValue();
@@ -111,6 +110,7 @@ public class ContactResponseController {
                     contactMessageId, adminId, adminName, responseText
             );
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
         } catch (RuntimeException e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
@@ -130,7 +130,7 @@ public class ContactResponseController {
      * @return {@link ResponseEntity} con la respuesta actualizada o un error 404 NOT FOUND.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateResponse(@PathVariable Long id, @RequestBody Map<String, String> request) {
+    public ResponseEntity<Object> updateResponse(@PathVariable Long id, @RequestBody Map<String, String> request) { // CORREGIDO: <?> a <Object>
         try {
             String responseText = request.get("response");
             if (responseText == null || responseText.trim().isEmpty()) {
@@ -158,7 +158,7 @@ public class ContactResponseController {
      * @return {@link ResponseEntity} con estado HTTP 204 (NO CONTENT) si la eliminación fue exitosa, o 404 NOT FOUND.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteResponse(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteResponse(@PathVariable Long id) { // CORREGIDO: <?> a <Object>
         try {
             contactResponseService.deleteResponse(id);
             return ResponseEntity.noContent().build();
