@@ -27,8 +27,7 @@ import java.util.Map;
  *
  * @author Grupo GA01
  * @see RestTemplate
- * 
- */
+ * */
 @Component
 @RequiredArgsConstructor
 public class FileServiceClient {
@@ -82,20 +81,20 @@ public class FileServiceClient {
                 return fileUrl;
             } else {
                 String errorMsg = "Failed to upload image to file service: received status " + response.getStatusCode();
-                logger.error(errorMsg);
+                // Corrección: Eliminado logger.error antes de lanzar la excepción
                 throw new IllegalStateException(errorMsg);
             }
         } catch (HttpClientErrorException e) {
             String errorMsg = "Client error uploading image to file service: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
-            logger.error(errorMsg, e);
+            // Corrección: Eliminado logger.error, solo relanzamos con contexto
             throw new IllegalStateException(errorMsg, e);
         } catch (HttpServerErrorException e) {
             String errorMsg = "Server error uploading image to file service: " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
-            logger.error(errorMsg, e);
+            // Corrección: Eliminado logger.error, solo relanzamos con contexto
             throw new IllegalStateException(errorMsg, e);
         } catch (Exception e) {
             String errorMsg = "Error uploading image to file service: " + e.getMessage();
-            logger.error(errorMsg, e);
+            // Corrección: Eliminado logger.error, solo relanzamos con contexto
             throw new IllegalStateException(errorMsg, e);
         }
     }
